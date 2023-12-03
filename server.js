@@ -6,10 +6,8 @@ import colors from 'colors'
 import morgan from 'morgan'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
-import productRoutes from './routes/productRoutes.js'
-import userRoutes from './routes/userRoutes.js'
 import complainerRoutes from './routes/complainerRoutes.js'
-import orderRoutes from './routes/orderRoutes.js'
+import systemUserRoutes from './routes/systemUserRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 
 dotenv.config()
@@ -24,12 +22,12 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json())
 
+// MOBILE APP URLS
 app.use('/api/complainers', complainerRoutes)
-
-app.use('/api/products', productRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
+
+// WEB ADMIN Panel URLS
+app.use('/api/systemusers', systemUserRoutes)
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIEND_ID)
