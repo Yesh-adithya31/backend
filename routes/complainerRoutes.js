@@ -16,7 +16,7 @@ router.route("/").post(registerComplainer);
 router.post("/login", authComplainer);
 router
   .route("/otp")
-  .get(protect, checkOTP);
+  .post(protect, checkOTP);
 router
   .route("/profile")
   .get(protect, getComplainerProfile)
