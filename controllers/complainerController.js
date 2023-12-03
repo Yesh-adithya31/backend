@@ -236,5 +236,6 @@ export {
   authSystemUser,
   registerSystemUser,
   getComplainers,
+  getSystemUsers,
   updateSystemUser
 }
