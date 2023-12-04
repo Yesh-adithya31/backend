@@ -4,6 +4,8 @@ import Complainer from "../models/Complainer.js";
 import SystemUser from "../models/SystemUser.js";
 import ShoutoutClient from "shoutout-sdk";
 import OTP from "../models/OTP.js";
+import ComplaintCategory from "../models/ComplaintCategory.js";
+import Department from "../models/Department.js";
 
 // @desc Auth Complainer & get token
 // @route POST /api/complainers/login
@@ -257,6 +259,22 @@ const getComplainers = asyncHandler(async (req, res) => {
   res.status(201).json(users);
 });
 
+// @desc GET all Category
+// @route GET /api/systemusers/categories
+// @access private/Admin
+const getCategories = asyncHandler(async (req, res) => {
+  const categories = await ComplaintCategory.find({});
+  res.status(201).json(categories);
+});
+
+// @desc GET all Category
+// @route GET /api/systemusers/departments
+// @access private/Admin
+const getDeparments = asyncHandler(async (req, res) => {
+  const departments = await Department.find({});
+  res.status(201).json(departments);
+});
+
 // @desc GET all SystemUser
 // @route GET /api/systemusers/allusers
 // @access private/Admin
@@ -309,4 +327,6 @@ export {
   getComplainers,
   getSystemUsers,
   updateSystemUser,
+  getCategories,
+  getDeparments
 };
