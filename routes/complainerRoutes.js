@@ -5,6 +5,7 @@ import {
   checkOTP,
   deleteComplainer,
   getComplainerProfile,
+  makeComplaint,
   registerComplainer,
   updateComplainerProfile,
 } from "../controllers/complainerController.js";
@@ -14,9 +15,8 @@ const router = express.Router();
 // Complainer Routes
 router.route("/").post(registerComplainer);
 router.post("/login", authComplainer);
-router
-  .route("/otp")
-  .post(protect, checkOTP);
+router.route("/otp").post(protect, checkOTP);
+router.route("/makeComplaint").post(protect, makeComplaint);
 router
   .route("/profile")
   .get(protect, getComplainerProfile)

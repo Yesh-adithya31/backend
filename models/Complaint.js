@@ -1,45 +1,55 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const complaintSchema = mongoose.Schema({
-    categoryName:{
-        type: String,
-        required: true
+const complaintSchema = new mongoose.Schema(
+  {
+    attachment: {
+      type: String,
+      required: true,
     },
-    complaintSubject:{
-        type: String,
-        required: true
+    attachmentType: {
+      type: String,
+      required: true,
     },
-    complaintText:{
-        type: String,
-        required: true
+    category: {
+      type: String,
+      required: true,
     },
-    status:{
-        type: String,
-        required: true
+    complaint: {
+      type: String,
+      required: true,
     },
-    attachment:{
-        type: String,
-        required: true
+    complaintSubject: {
+      type: String,
+      required: true,
     },
-    location:{
-        type: String,
-        required: true
-    },
-    targetDepartments:[
-        {
-            departmentName:{type : String, required: true},
-            department:{
-                type: mongoose.Schema.Types.ObjectId, 
-                required: true,
-                ref: 'Department'
-            },
-        }
+    departments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Department", // Reference to the Department model
+      },
     ],
-    
-},{
-    timestamps: true
-})
+    selectedLocation: {
+      latitude: {
+        type: Number,
+        required: true,
+      },
+      longitude: {
+        type: Number,
+        required: true,
+      },
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Complainer", // Reference to the Complainer model
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const Complaint = mongoose.model('Complaint',complaintSchema)
+const Complaint = mongoose.model("Complaint", complaintSchema);
 
-export default Complaint
+export default Complaint;

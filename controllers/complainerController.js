@@ -6,6 +6,10 @@ import ShoutoutClient from "shoutout-sdk";
 import OTP from "../models/OTP.js";
 import ComplaintCategory from "../models/ComplaintCategory.js";
 import Department from "../models/Department.js";
+import Complaint from "../models/Complaint.js";
+import path from 'path'
+import express from 'express'
+import multer from 'multer'
 
 // @desc Auth Complainer & get token
 // @route POST /api/complainers/login
@@ -34,7 +38,7 @@ const authComplainer = asyncHandler(async (req, res) => {
       phoneNumber = `94${phoneNumber.slice(1)}`;
     }
 
-    var otp =  generateRandom4DigitNumber();
+    var otp = generateRandom4DigitNumber();
 
     // Send SMS using the modified phoneNumber
     var debug = true,
@@ -42,22 +46,21 @@ const authComplainer = asyncHandler(async (req, res) => {
 
     var client = new ShoutoutClient(process.env.SHOUT_API, debug, verifySSL);
     var message = {
-      content: { sms: otp+" is your Crime.lk authentication code." },
+      content: { sms: otp + " is your Crime.lk authentication code." },
       destinations: [phoneNumber],
       source: "ShoutDEMO",
       transports: ["SMS"],
     };
 
-    client.sendMessage(message,async (error, result) => {
+    client.sendMessage(message, async (error, result) => {
       if (error) {
         console.error("Error sending message!", error);
       } else {
         console.log("Sending message successful!", result);
         await OTP.create({
           otp,
-          user: user._id
+          user: user._id,
         });
-
       }
     });
   } else {
@@ -111,9 +114,9 @@ const registerComplainer = asyncHandler(async (req, res) => {
 // @route GET /api/complainers/profile
 // @access private
 const checkOTP = asyncHandler(async (req, res) => {
-  const user = await OTP.findOne({user : req.user._id});
+  const user = await OTP.findOne({ user: req.user._id });
   if (user.otp === req.body.otp) {
-    res.status(201).json('Correct OTP entered')
+    res.status(201).json("Correct OTP entered");
     await OTP.findByIdAndDelete(user._id);
   } else {
     res.status(404);
@@ -137,6 +140,32 @@ const getComplainerProfile = asyncHandler(async (req, res) => {
       phoneNumber: user.phoneNumber,
       email: user.email,
     });
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+
+// @desc POST make complaint
+// @route POST /api/complainers/makeComplaint
+// @access private
+const makeComplaint = asyncHandler(async (req, res) => {
+  const complaint = await Complaint.create({
+    attachment: req.body.attachment,
+    attachmentType: req.body.attachmentType,
+    category: req.body.category,
+    complaint: req.body.complaint,
+    complaintSubject: req.body.complaintSubject,
+    departments: req.body.departments,
+    selectedLocation: {
+      latitude: req.body.selectedLocation.latitude,
+      longitude: req.body.selectedLocation.longitude,
+    },
+    user: req.user._id,
+  });
+
+  if (complaint) {
+    res.status(201).json('Complaint created successfully');
   } else {
     res.status(404);
     throw new Error("User not Found");
@@ -328,5 +357,6 @@ export {
   getSystemUsers,
   updateSystemUser,
   getCategories,
-  getDeparments
+  getDeparments,
+  makeComplaint
 };
