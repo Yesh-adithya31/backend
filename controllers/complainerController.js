@@ -146,6 +146,20 @@ const getComplainerProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc GET user History
+// @route GET /api/complainers/history
+// @access private
+const getComplaintHistory = asyncHandler(async (req, res) => {
+  const history = await Complaint.find({user: req.user._id});
+
+  if (history) {
+    res.status(201).json(history);
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+
 // @desc POST make complaint
 // @route POST /api/complainers/makeComplaint
 // @access private
@@ -358,5 +372,6 @@ export {
   updateSystemUser,
   getCategories,
   getDeparments,
-  makeComplaint
+  makeComplaint,
+  getComplaintHistory
 };

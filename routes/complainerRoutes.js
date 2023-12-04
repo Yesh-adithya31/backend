@@ -5,6 +5,7 @@ import {
   checkOTP,
   deleteComplainer,
   getComplainerProfile,
+  getComplaintHistory,
   makeComplaint,
   registerComplainer,
   updateComplainerProfile,
@@ -17,6 +18,7 @@ router.route("/").post(registerComplainer);
 router.post("/login", authComplainer);
 router.route("/otp").post(protect, checkOTP);
 router.route("/makeComplaint").post(protect, makeComplaint);
+router.route("/history").get(protect, getComplaintHistory);
 router
   .route("/profile")
   .get(protect, getComplainerProfile)
